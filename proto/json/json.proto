@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package proto.json;
+
+option go_package="github.com/synerex/proto_json";
+
+import "google/protobuf/timestamp.proto";
+
+message JsonRecord {
+    string tag = 1;
+    google.protobuf.Timestamp time = 2;
+    string json = 3;
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package proto.fluentd;
+
+option go_package="github.com/synerex/proto_fluentd";
+
+import "google/protobuf/timestamp.proto";
+
+message FluentdRecord {
+    string tag = 1;
+    google.protobuf.Timestamp time = 2;
+    bytes record = 3;
+}

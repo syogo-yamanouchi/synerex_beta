@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang>
+    <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+            <title>Simple Synerex Federation Gateway</title>
+    </head>
+    <body>
+
+        <center><h2>Very simple Synerex Federation Gateway Sample</h2></center>
+
+
+        <hr />
+        <h3>Configuration</h3>
+            <form id="auth" method="POST">
+                <input type="" />
+                <select name="auth">
+                    <option values="">abc</option>
+                </select>
+
+            </form>
+
+        <hr />
+
+        <form id="message_form" action="#">
+            <input id="message" autocomplete="off" /> <button>Send</button>
+        </form>
+
+
+        <div id="messages">
+
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
+        
+        <script>
+            // connect to current host
+            const socket = io(); 
+
+            socket.on('connect', () =>{
+                console.log("socket connected");
+
+            });
+            socket.on('disconnect', () =>{
+                console.log("socket Disconnected");
+            });
+
+            socket.on('data', (data) => {
+                console.log("Data received", data);
+            });
+
+            $(function(){
+                $('#message_form').submit(function(){
+                    socket.emit('message', $('#message').val());
+                    $('#input_msg').val('');
+                    return false;
+                });
+            });
+
+        </script>
+    </body>
+</html>

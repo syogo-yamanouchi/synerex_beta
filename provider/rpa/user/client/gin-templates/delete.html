@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm</title>
+</head>
+
+<body>
+    <p>Are you sure to delete this user?</p>
+    <ul>
+        <li>ID: {{.user.ID}}</li>
+        <li>Username: {{.user.Username}}</li>
+    </ul>
+
+    <form method="post" action="/delete/{{.user.ID}}">
+        <p><input type="submit" value="Delete"></p>
+        <p><a href="/users">Cancel</a></p>
+    </form>
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Show</title>
+</head>
+
+<body>
+    <p>Username(id): {{.user.Username}}({{.user.ID}})</p>
+    <p>Reservations:
+        <ul>
+            {{range .reservations}}
+            <li>
+                {{.Year}}/{{.Month}}/{{.Day}} {{.Week}} {{.Start}}~{{.End}} {{.People}}人 {{.Title}} 予約中:{{.Active}}
+                {{if eq .Active true}}
+                <form method="post" action="/cancel/{{.ID}}">
+                    <input type="submit" value="この予約をキャンセルする">
+                </form>
+                {{end}}
+            </li>
+            {{end}}
+        </ul>
+    </p>
+    <a href="/users">Back</a>
+</body>
+
+</html>

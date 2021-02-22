@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package proto.storage;
+
+option go_package="github.com/synerex/proto_storage";
+
+//import "google/protobuf/timestamp.proto";
+
+enum StorageType {
+     TYPE_ANY = 0;
+     TYPE_FILE = 1;
+     TYPE_DATABASE = 2;
+     TYPE_KVSTORE = 3;
+     TYPE_OBJSTORE = 4;
+}    
+
+enum DataType {
+     DATA_ANY = 0;         // file for each date (for each line)
+     DATA_LINE_APPEND = 1;  // file for each date (for each line)
+     DATA_FILE = 2;        // file type for each record. date for direcotory     
+}
+
+// Demand/Supply message 
+message Storage {
+    string tag = 1;		// used for master tag
+    StorageType stype = 2;
+    DataType dtype = 3;
+    uint32 datasize = 4;
+    uint64 storageSize = 5;
+}
+
+// Data Store message
+message Record {
+    string bucketName = 1;   // if DATA_FILE , folder name
+    string objectName = 2;    // if DATA_FILE , filename. / If KV Key
+    bytes option = 3;  // option used for each storage type.(Not yet used)
+    bytes record = 4;  // main object
+}
+
+message RecordQuery {
+    string bucketName = 1;   // if DATA_FILE , folder name
+    repeated string objectNames = 2;    // if DATA_FILE , filename. / If KV Key
+    bytes option = 3;  // option used for each storage type.(Not yet used)
+}
+
+message Tag {
+    string key = 1;
+    string value = 2;
+}
+
+message BucketTag {
+    string bucketName = 1;   // if DATA_FILE , folder name    
+    repeated Tag tags = 2;
+}
+
+message ObjectTag {  // only for ObjectStorage
+    string bucketName = 1;      
+    string objectName = 2;
+    repeated Tag tags = 3;
+}

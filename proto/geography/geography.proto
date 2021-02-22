@@ -1,0 +1,155 @@
+syntax = "proto3";
+
+package geography;
+
+option go_package="github.com/synerex/proto_geography";
+
+import "google/protobuf/timestamp.proto";
+
+// geographic data  (mainly for supply)
+message Geo
+{
+    string type = 1;        // may contain 
+    int32  id = 2;
+    string label = 3;
+    bytes  data = 4;
+    string options = 5;
+}
+
+message Line
+{
+    repeated double from = 1;
+    repeated double to = 2;
+}
+
+message Lines
+{
+    repeated Line lines = 1;
+    int32 width = 2;
+    repeated int32 color = 3; // only top 3 is used
+}
+
+message Point
+{
+    double lat = 1;
+    double lon = 2;
+}
+
+message Path
+{
+    repeated Point points = 1;
+    int32 width = 2;
+    repeated int32 color = 3; // only top 3 is used
+}
+
+message Paths
+{
+    repeated Path paths = 1;
+}
+
+message Arcs  // message for ArcLayer on HarmoVIS
+{
+    repeated Point srcs = 1;
+    repeated Point tgts = 2;
+    repeated int32 srcCols = 3;
+    repeated int32 tgtCols = 4;
+    repeated int32 tilts = 5;  // may no tilts
+}
+
+message Scatters // message for ScatterPlotLayer on HarmoVIS
+{
+    repeated Point points = 1;
+    repeated int32 radiuses = 2;
+    repeated int32 fillColors = 3; // 0xXXXXXX style color 
+    repeated int32 lineColors = 4;
+    int32 lineWidth = 5;
+    int32 fillAlpha = 6; // if minus , no fill.
+}
+
+message TopTextLabel // text label for HarmoVIS
+{
+    string label = 1;  // text for label
+    string style = 2;  // style sheet json for label        
+}
+
+message ViewState
+{
+    double lat = 1;
+    double lon = 2;
+    double zoom = 3;     
+    double pitch = 4;
+    double duration = 5; // for animation (animation time in sec)
+}
+
+message Bearing
+{
+    double bearing = 1;
+    double duration = 2; // for animation (animation time in sec)
+}
+
+message Pitch
+{
+    double pitch = 1;
+    double duration = 2; // for animation (animation time in sec)
+}
+
+message ClearMoves
+{
+    string message = 1;
+}
+
+message ClearScatters
+{
+    string message = 1;
+}
+
+message ClearArcs
+{
+    string message = 1;
+}
+
+// for BarGraph type
+enum BarColorType {
+    FIXCOLOR = 0;
+    VARCOLOR = 1;
+}
+
+enum BarShapeType {
+    BOX = 0;
+    HEX = 1;
+}
+
+message BarData {
+    string label = 1;
+    int32 color = 3;
+    double value = 2;
+}
+
+message BarGraph
+{
+    int32 id = 1;
+    google.protobuf.Timestamp ts = 2;
+    BarShapeType shapeType = 3;
+    BarColorType colorType = 4;
+    int32 color = 5;
+    double lat = 6;
+    double lon = 7;
+    double width = 8;
+    double radius = 9;
+    double min = 10;
+    double max = 11;
+    int32 areaColor = 12;
+    repeated BarData barData = 13;
+    string text = 14; 
+}
+
+message BarGraphs
+{
+    repeated BarGraph bars = 1;
+}
+
+
+message HarmoVIS // options for HarmoVIS control
+{   
+    string confJson = 1; // json string
+}

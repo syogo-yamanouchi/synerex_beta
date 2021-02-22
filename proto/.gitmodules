@@ -1,0 +1,30 @@
+[submodule "fleet"]
+	path = fleet
+	url = https://github.com/synerex/proto_fleet
+[submodule "fluentd"]
+	path = fluentd
+	url = https://github.com/synerex/proto_fluentd.git
+[submodule "rpa"]
+	path = rpa
+	url = https://github.com/synerex/proto_rpa.git
+[submodule "storage"]
+	path = storage
+	url = https://github.com/synerex/proto_storage.git
+[submodule "ptransit"]
+	path = ptransit
+	url = https://github.com/synerex/proto_ptransit.git
+[submodule "geography"]
+	path = geography
+	url = https://github.com/synerex/proto_geography.git
+[submodule "json"]
+	path = json
+	url = https://github.com/synerex/proto_json.git
+[submodule "pcounter"]
+	path = pcounter
+	url = https://github.com/synerex/proto_pcounter.git
+[submodule "mqtt"]
+	path = mqtt
+	url = https://github.com/synerex/proto_mqtt
+[submodule "wes"]
+	path = wes
+	url = https://github.com/synerex/proto_wes.git

@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  rpa_user_provider:
+    tty: true
+    build:
+      context: ./user
+      dockerfile: Dockerfile
+    image: rpa_user_provider
+    volumes:
+      - ./user:/go/src/github.com/synerex/provider/provider_rpa/user
+    ports:
+      - "8888:8888"
+    networks:
+      - synerex_net
+  meeting_provider:
+    tty: true
+    build:
+      context: ./meeting
+      dockerfile: Dockerfile
+    image: meeting_provider
+    volumes:
+      - ./meeting:/go/src/github.com/synerex/provider/provider_rpa/meeting
+    networks:
+      - synerex_net
+networks:
+  synerex_net:
+    external: true

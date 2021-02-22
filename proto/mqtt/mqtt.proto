@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package proto.mqtt;
+
+option go_package="github.com/synerex/proto_mqtt";
+
+import "google/protobuf/timestamp.proto";
+
+message MQTTRecord {
+    string topic = 1;
+    google.protobuf.Timestamp time = 2;
+    bytes record = 3;
+}

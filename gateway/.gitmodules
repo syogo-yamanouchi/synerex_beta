@@ -1,0 +1,6 @@
+[submodule "simple"]
+	path = simple
+	url = https://github.com/synerex/gateway_simple.git
+[submodule "federation"]
+	path = federation
+	url = https://github.com/synerex/gateway_federation.git

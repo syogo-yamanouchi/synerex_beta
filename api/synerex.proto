@@ -1,0 +1,170 @@
+syntax = "proto3";
+
+package api;
+
+option go_package="github.com/synerex/synerex_api";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+service Synerex {
+    rpc NotifyDemand(Demand) returns (Response) {}
+    rpc NotifySupply(Supply) returns (Response) {}
+    rpc ProposeDemand(Demand) returns (Response) {}
+    rpc ProposeSupply(Supply) returns (Response) {}
+    rpc SelectSupply(Target) returns (ConfirmResponse) {}
+    rpc SelectDemand(Target) returns (ConfirmResponse) {}
+    rpc Confirm(Target) returns (Response){}
+    rpc SubscribeDemand(Channel) returns (stream Demand) {}
+    rpc SubscribeSupply(Channel) returns (stream Supply) {}
+
+    rpc CreateMbus(MbusOpt) returns (Mbus){}
+    rpc CloseMbus(Mbus) returns (Response){}
+    rpc SubscribeMbus(Mbus) returns (stream MbusMsg) {}
+    rpc SendMbusMsg(MbusMsg) returns (Response){}
+    rpc GetMbusState(Mbus) returns (MbusState){}
+
+    rpc SubscribeGateway(GatewayInfo) returns (stream GatewayMsg) {} // read messages
+    rpc ForwardToGateway(GatewayMsg) returns (Response){}            // send messages
+
+    rpc CloseDemandChannel(Channel) returns (Response){} // close demand channel
+    rpc CloseSupplyChannel(Channel) returns (Response){} // close supply channel
+    rpc CloseAllChannels(ProviderID) returns (Response){} // close all channels from Provider
+}
+
+message Response {
+    bool ok = 1;
+    string err = 2;
+}
+
+message ConfirmResponse{
+    bool ok = 1;
+    fixed64 mbus_id = 2;
+    google.protobuf.Duration wait =3;
+    string err = 4;
+}
+
+message Content {
+    bytes entity = 1;
+}
+
+message Supply{
+    fixed64 id = 1;
+    fixed64 sender_id = 2;
+    fixed64 target_id = 3;// for message id (not for sender_id)
+    uint32 channel_type = 4; // channel type
+    string supply_name = 5;
+    google.protobuf.Timestamp ts = 6;
+    string arg_json = 7;
+    fixed64 mbus_id = 8;   // new mbus id for select demand.
+    Content cdata = 9; // content data
+}
+
+message Demand {
+    fixed64 id = 1;
+    fixed64 sender_id = 2;
+    fixed64 target_id = 3; // if set with message id (not for sender_id) (select for supply)
+    uint32 channel_type = 4; // channel type
+    string demand_name = 5;
+    google.protobuf.Timestamp ts = 6;
+    string arg_json = 7;
+    fixed64 mbus_id = 8;   // new mbus id for select supply...
+    Content cdata = 9; // content data
+}
+
+message Target {
+    fixed64 id = 1;
+    fixed64 sender_id = 2;
+    fixed64 target_id = 3; // for target
+    uint32 channel_type = 4; // channel type
+    google.protobuf.Duration wait = 5;
+    fixed64 mbus_id = 6;    // if you need message bus, set Mbus with mbus_id = 1
+}
+
+message Channel {
+    fixed64 client_id = 1;
+    uint32 channel_type = 2; // channel type
+    string arg_json = 3;  // for Channel Argument
+}
+
+message Mbus {
+    fixed64 client_id = 1;
+    fixed64 mbus_id = 2;
+    string arg_json = 3; // for mbus description
+}
+
+message MbusMsg {
+    fixed64 msg_id = 1;    // if 0 for close message
+    fixed64 sender_id = 2;
+    fixed64 target_id = 3; // for target // if 0 for broadcast in mbus
+    fixed64 mbus_id = 4;
+    uint32 msg_type = 5;  // for message type
+    string msg_info = 6;   // for abstract information
+    string arg_json = 7;
+    Content cdata = 8; // content data (enbedded from v0.4.0)
+}
+
+// options for creating Mbus from v0.4.0
+message MbusOpt {
+    MbusType mbus_type = 1;
+    repeated fixed64 subscribers = 2;  // use this for limiting subscribers
+
+    enum MbusType {
+        PUBLIC  = 0;
+        PRIVATE = 1;
+    }    
+}
+
+// message for obtaining mbus state from 0.4.0
+message MbusState {
+    fixed64 mbus_id   = 1;
+    MbusStatus status = 2;
+    repeated fixed64 subscribers = 3; // subscriber count  (only with status= SUBSCRIBERS)
+
+    enum MbusStatus {
+        INTIALIZED  = 0; // just created (no subscribers)
+        SUBSCRIBERS = 1; // there are some subscribers
+        CLOSED      = 2; // closed mbus
+        INVALID     = 3; // no mbus is available with the mbus_id or hidden.
+    }
+}
+
+// 
+
+enum GatewayType {
+    BIDIRECTIONAL = 0; // normal gateway
+    WRITE_ONLY = 1;    // no need to receive
+    READ_ONLY = 2;     //
+}
+
+message GatewayInfo {
+    fixed64 client_id = 1; // client_id (snowflake) of gateway
+    GatewayType gateway_type = 2;
+    repeated uint32 channels = 3; // which channel for forward
+}
+
+enum MsgType {
+    DEMAND = 0;
+    SUPPLY = 1;
+    TARGET = 2;   // target for select/confirm
+    MBUS = 3;     // mbus id for subscribe
+    MBUSMSG = 4;
+}
+
+// Subscribe from Gateway to SynerexServer
+message GatewayMsg{  // how to prevent loop!
+    fixed64 src_synerex_id = 1;
+    MsgType msg_type = 2; // massage type
+    oneof msg_oneof {
+        Demand demand = 3;
+        Supply supply = 4;
+        Target target = 5;
+        Mbus mbus = 6;
+        MbusMsg mbus_msg= 7;
+    }
+}
+
+message ProviderID {
+    fixed64 client_id = 1;
+    string arg_json = 3;  // for Any Argument
+}

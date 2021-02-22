@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package proto_rpa;
+
+option go_package="github.com/synerex/proto_rpa";
+
+message MeetingService {
+    string cid = 1;
+    string status = 2;
+    string year = 3;
+    string month = 4;
+    string day = 5;
+    string week = 6;
+    string start = 7;
+    string end = 8;
+    string people = 9;
+    string title = 10;
+    string room = 11;
+    string rid = 12;
+    string provider = 13;
+}

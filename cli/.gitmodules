@@ -1,0 +1,3 @@
+[submodule "nodeserv_cli"]
+	path = nodeserv_cli
+	url = https://github.com/synerex/synerex_nodeserv_cli.git

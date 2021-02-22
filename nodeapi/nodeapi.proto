@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package nodeapi;
+
+import "google/protobuf/timestamp.proto";
+//import "google/protobuf/duration.proto";
+
+option go_package="github.com/synerex/synerex_nodeapi";
+
+service Node {
+    rpc RegisterNode(NodeInfo) returns (NodeID) {}
+    rpc QueryNode(NodeID) returns (NodeInfo){}        // get specific information from nodeID
+    rpc KeepAlive(NodeUpdate) returns (Response){}    // each provider should keep alive.
+    rpc UnRegisterNode(NodeID) returns (Response){}
+}
+
+enum NodeType {
+    PROVIDER = 0;  // most of node is normal provider
+    SERVER = 1;    // node is synerex server.
+    GATEWAY = 2;   // node is synerex gateway. (for inter synerex/outer synerex)
+}
+
+// information for synerex servers and providers, gateways (nodes)
+message NodeInfo{
+    string node_name = 1;
+    NodeType node_type = 2; // node is provider/server/gateway?
+    string server_info = 3; // for synerex servers/gateways
+    string node_pbase_version = 4; // which protocol base version
+    int32 with_node_id = 5;  // for reconnection with previous node_id (usually -1)
+    int32 cluster_id = 6; //
+    string area_id = 7; // for area definition
+    repeated uint32 channelTypes = 8; // used channel list
+    string gw_info = 9; // for gateway information
+  // for information for controller
+    string bin_version = 10;  // version of binary
+    int32 count = 11;  // keepalive update count
+    google.protobuf.Timestamp last_alive_time = 12;
+    string keepalive_arg = 13;  // keepalive argument
+}
+
+message NodeID{
+    int32 node_id = 1;  // unique id for each node in current node server.
+    fixed64 secret = 2; // secret id with node_server (Not used for Query)
+    string server_info = 3; // synerex server address (only for registration of Server/Gateway)
+    int32 keepalive_duration = 4; // at least make keep alive less than this time.
+}
+
+message ServerStatus {
+    double cpu = 1; // cpu load average
+    double memory = 2; // memory usage rate
+    uint64 msg_count = 3; // message count
+}
+
+message NodeUpdate {
+    int32 node_id = 1;       // unique id for each node in current node server.
+    fixed64 secret = 2;      // secret number for each provider (for auth)
+    int32 update_count = 3;  // sequential counter for nodes
+    int32  node_status = 4;  // running state (health check)
+    string node_arg = 5;
+    ServerStatus status = 6; // server status (load average)
+}
+
+enum KeepAliveCommand {
+    NONE = 0;
+    RECONNECT = 1; // node server is now restarted. please reconnect.
+    SERVER_CHANGE = 2; // There is change in Synerex Server. Obtain server information.
+    PROVIDER_DISCONNECT = 3; // only for Synerex-Server. Provider is disconnected. Remove Channels
+}
+
+message Response {
+    bool ok = 1;
+    KeepAliveCommand command = 2;
+    string err = 3;
+}

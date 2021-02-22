@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package ptransit;
+
+option go_package="github.com/synerex/proto_ptransit";
+
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+message PTService
+{ // Location Service for Public Transit
+    int32 operator_id = 1;
+    int32 line_id = 2;
+    int32 past_station_id = 3;
+    int32 station_group_id = 4;
+    int32 next_station_id = 5;
+    string next_station_name = 6;
+    int32 vehicle_id = 7;
+    float angle = 8;
+    int32 speed = 9;
+    float lat = 10;
+    float lon = 11;
+    google.protobuf.Timestamp next_arraival_timetable_time = 12;
+    google.protobuf.Timestamp past_departure_time = 13;
+    google.protobuf.Duration delay_time = 14;
+    int32 vehicle_type = 15;
+}
+
+message PTgtfs
+{ // location information for bus/train stations from GTFS
+    string gtfs_name = 1;
+    bytes gtfs = 2;
+}
+
+
+
+
+

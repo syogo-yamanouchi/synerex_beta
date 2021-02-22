@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package pcounter;
+
+option go_package="github.com/synerex/proto_pcounter";
+
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+// People Counter Service message
+message PCounter
+{   string device_id = 1;
+    string hostname = 2;
+    string location = 3;
+    string timezone = 4;
+    string mac = 5;
+    string hardware = 6;
+    string protocol = 7;
+    string ip = 8;
+    string ip_vpn = 9;
+    google.protobuf.Timestamp ts= 10;
+    repeated PEvent data = 11;   // message has several event data.
+}
+
+message PEvent 
+{
+    string typ = 1;  // one of "counter, fillLevel, dwellTime"
+    string id = 2;
+    uint32 seq = 3;   // sequence number (onr)
+    uint32 height = 4;
+    string dir = 5; // direction
+    google.protobuf.Timestamp ts= 6;
+    google.protobuf.Timestamp ts_exit = 7;
+    uint32 fillLevel = 8;
+    float dwellTime = 9;
+    float expDwellTime = 10;
+    uint32 object_id = 11;
+}
+
+message PCounters
+{
+    repeated PCounter pcs = 1; // multiple counter data for fast transfer
+}
+
+// Area counter 
+message ACounter
+{
+    google.protobuf.Timestamp ts = 1;
+    string areaName = 2;
+    uint32 areaId = 3;
+    int32  count = 4;                       // current people number (reset required)
+}
+
+message ACounters
+{
+    repeated ACounter acs = 1; // multiple counter data for fast transfer
+    uint32 intervalSec = 2; //   0 = raw, other = seconds of interval
+}
+
+
+// retrieve message
+message Retrieve
+{
+    google.protobuf.Timestamp from = 1;
+    google.protobuf.Duration duration = 2;
+    string query = 3;
+    oneof result {
+        PCounters pc_res = 4;
+        ACounters ac_res = 5;
+    }
+}
+
+
+

@@ -1,0 +1,6 @@
+[submodule "user"]
+	path = user
+	url = https://github.com/synerex/rpa_user.git
+[submodule "meeting"]
+	path = meeting
+	url = https://github.com/synerex/rpa_meeting.git

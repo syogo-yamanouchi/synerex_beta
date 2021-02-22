@@ -1,0 +1,30 @@
+[submodule "api"]
+	path = api
+	url = https://github.com/synerex/synerex_api.git
+[submodule "server"]
+	path = server
+	url = https://github.com/synerex/synerex_server.git
+[submodule "nodeapi"]
+	path = nodeapi
+	url = https://github.com/synerex/synerex_nodeapi.git
+[submodule "nodeserv"]
+	path = nodeserv
+	url = https://github.com/synerex/synerex_nodeserv.git
+[submodule "sxutil"]
+	path = sxutil
+	url = https://github.com/synerex/synerex_sxutil.git
+[submodule "provider"]
+	path = provider
+	url = https://github.com/synerex/synerex_provider
+[submodule "proto"]
+	path = proto
+	url = https://github.com/synerex/synerex_proto
+[submodule "gateway"]
+	path = gateway
+	url = https://github.com/synerex/synerex_gateway.git
+[submodule "synerex_beta_cli"]
+	path = synerex_beta_cli
+	url = https://github.com/synerex/synerex_beta_cli.git
+[submodule "cli"]
+	path = cli
+	url = https://github.com/synerex/synerex_beta_cli.git

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/jquery-ui.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+        integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/pickadate/classic.css">
+    <link rel="stylesheet" href="css/pickadate/classic.date.css">
+    <link rel="stylesheet" href="css/pickadate/classic.time.css">
+    <link rel="stylesheet" href="css/index.css">
+    <title>RPA User Client</title>
+</head>
+
+<body>
+    <div class="container" style="padding-top: 30px">
+
+        <form id="booking_form">
+            <div class="form-group">
+                <label for="booking-date">Date</label>
+                <input type="text" class="datepicker form-control" id="booking-date">
+            </div>
+            <div class="form-group">
+                <label for="booking-start">Start</label>
+                <input type="text" class="timepicker form-control" id="booking-start">
+            </div>
+            <div class="form-group">
+                <label for="booking-end">End</label>
+                <input type="text" class="timepicker form-control" id="booking-end">
+            </div>
+            <div class="form-group">
+                <label for="number-people">People</label>
+                <input type="number" class="form-control" id="number-people" min="0" max="100">
+            </div>
+            <div class="form-group">
+                <label for="booking-title">Title</label>
+                <input type="text" class="form-control" id="booking-title">
+            </div>
+            <button type="submit" id="send" class="btn btn-primary">空室確認</button>
+        </form>
+
+        <div id="status"></div>
+        <ul id="booking_options"></ul>
+        <ul id="booking_results"></ul>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/pickadate/legacy.js"></script>
+    <script src="js/pickadate/picker.js"></script>
+    <script src="js/pickadate/picker.date.js"></script>
+    <script src="js/pickadate/picker.time.js"></script>
+    <script src="js/pickadate/ja_JP.js"></script>
+    <script src="js/index.js"></script>
+</body>
+
+</html>

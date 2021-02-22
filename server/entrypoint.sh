@@ -1,0 +1,3 @@
+#!/bin/sh
+
+./synerex-server

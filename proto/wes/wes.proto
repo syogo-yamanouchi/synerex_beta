@@ -1,0 +1,177 @@
+syntax = "proto3";
+
+package proto.wes;
+
+option go_package="github.com/synerex/proto_wes";
+
+// This is a warehouse protocol for synerex.
+
+//from wes-provider 
+message wesMessage { 
+    string topic=1; //topic
+    int64 wmsID = 2;
+    int64 humanID = 3;
+    int64 amrID = 4;
+    int64 wmsStart = 5; //unixtime
+    Position pos = 6; //待っている場所
+    bytes message = 7; //message
+}
+
+//二次元座標
+message Position { 
+    float x=1;
+    float y=2;
+}
+
+//wmsの一つの商品
+message Item{ 
+    int64 itemID = 1;
+    string shelfID = 2;
+    bool isPicked = 3;
+    int64 pickTime = 4; //unix
+    int64 index = 5;
+    Position location = 6;
+}
+
+message wmsOrder{
+    int64 wmsID=1;
+    int64 humanID=2;
+    repeated Item item = 3; 
+    int64 getTime = 4;
+    bool giveItem = 5;
+    int64 humanAssignTime=6;
+    int64 amrAssignTIme=7;
+}
+
+//simlation type
+message simType{ 
+    string simType =1; //synchronous or asynchronous or onlyHuman
+}
+
+//from wes
+message amrState{
+    int64 id=1; //amrID
+    int64 wmsBatNum = 2; //current wms batID
+    int64 startTime = 3; //unix
+    int64 currentTime = 4;  //unix
+    int64 elapsedTime = 5; //[sec]
+    string state = 6; //status
+    Position targetPos = 7; 
+    Position pos =8; //current pos
+    string target = 9; //target pos name
+    float moveDistance = 10; //moving distance
+    repeated int64 finishWms= 11; //finish wmsID list
+    int64 humanID =12; //assign humanID
+}
+
+//from wes
+message wesState{
+    string simType = 1; //simlation type
+    repeated int64 workingWms = 2; //wmsID list worked by humans
+    repeated int64 restWms=3; //wmsID list not worked
+    repeated int64 finishWms=4; //wmsID list shiped
+    int64 wmsGetTime=5; //unix
+    int64 currentTime=6; //unix
+    int64 elapsedTime=7; //[sec]
+    float speed=8; //simlation speed
+}
+
+// one cart's state
+message wesCartState{
+    int64 id = 1;
+    Position pos = 2; //put position
+    int64  latestMsgTime= 3; //latest receive msg time 
+    int64 humanID = 4;  //using humanID
+    int64 elapsedTime = 5; //[sec]
+    int64 currentTime = 6;  //unix
+    string status = 7;//state
+    int64 amrID = 8; //assigned amrID 
+    float moveDistance = 9; //moving distance
+}
+
+// wesHumanState from wes , wes's monitering human state
+message wesHumanState{
+    int64 id = 1;
+    repeated string pickedItem = 2; //picked item's shelfID list
+    repeated string noPickedItem = 3;// not picked item's shelfID list
+    int64 latestMsgTime = 4; //latest receive message's time (unix)
+    Position latestPos = 5; //latest receive message's position
+    float progress = 6; //wms_orderの進行度
+    int64 pickingItemIndex = 7; //picking item's index of wms_order's itemList
+    int64 workingWms = 8; //working wmsID (wes guess from message)
+    int64 wmsItemNum = 9; //working wms's all item num
+    int64 cartId = 10; //having cart (estimate)
+    repeated int64 restWms = 11; //rest wms ids(estimate)
+    int64 elapsedTime = 12; //elapsedTime
+    string lastItem = 13; //next picking item name
+    string nextItem = 14; //next picking item
+    float moveDistance = 15; //moving distance
+    string message = 16; //from wes message to human
+    repeated int64 finishWms = 17; //finishWmsList
+    int64 assignAmr = 18; //割り振られたamrのID
+    Position targetPos = 19; //目的地の座標
+    repeated wmsOrder allWms = 20; 
+    string amrMessage =21; //割り当てられたamrの情報
+}
+
+message pickInfo { //picking info
+    int64 humanID = 1;
+    string shelfID = 2;
+    int64 wmsID = 3; 
+}
+
+message giveinfo {
+    int64 humanID = 1;
+    int64 amrID = 2;
+    int64 wmsID = 3;
+}
+
+// hsim status, from hsim
+message hsimState{
+    string simType = 1; //simlation type
+    repeated int64 workingWms = 2;
+    repeated int64 finishWms = 3;
+    int64 wmsGetTime = 4;
+    int64 currentTime = 5;
+    int64 elapsedTime = 6; //[sec]
+    repeated int64 idList = 7; //human id list
+}
+
+message hsimCartState{
+    int64 id=1; //ID
+    string state = 2;//state of cart
+    Position pos=3;//current position
+    int64 humanID =4;//bring or put humanID
+    repeated string items =5;//items in cart
+    int64 lastUpdateUnix = 6;//latest update time
+    int64 putUnix = 7; //human put time(unix)
+}
+
+
+//from hsim
+message hsimMessage{ 
+    string topic=1;
+    int64 wmsID = 2;
+    int64 humanID = 3;
+    int64 amrID = 4;
+    int64 wmsStart = 5; //unix
+    Position putPos = 6; //position of cart
+    int64 putTime =7; //unixtime at cart put
+}
+
+//from hsim
+message humanState { 
+    int64 id=1; //human id
+    int64 wmsBatNum = 2; //current wms batID
+    int64 startTime = 3; //unix
+    int64 currentTime=4;//unix
+    int64 elapsedTime = 5;//[sec]
+    string state = 6; //status
+    repeated int64 restWms=7;
+    Position targetPos =8; 
+    int64 pickedNum = 9;    //ピッキングされた商品の数
+    int64 wmsItemNum = 10;  //1batの商品の数
+    Position pos = 11;  //current pos
+    repeated string restItem = 12; //回収されていない商品の棚ID一覧
+    repeated string pickedItem = 13; //回収された商品の棚ID一覧
+}

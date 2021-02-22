@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+</head>
+
+<body>
+    <p>Users</p>
+    <ul>
+        {{range .users}}
+        <li>Username: {{ .Username }}
+            <a href="/show/{{.ID}}">Show</a>
+            <a href="/confirm_delete/{{.ID}}">Delete</a>
+        </li>
+        {{end}}
+    </ul>
+    <a href="/">Back</a>
+</body>
+
+</html>
